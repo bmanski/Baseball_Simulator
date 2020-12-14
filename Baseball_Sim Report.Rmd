@@ -1,0 +1,590 @@
+---
+title: "Where should the pitcher bat in the batting order?"
+author: "Benjamin Manski"
+date: "12/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+In Major League Baseball, there are two divisions, the National League and the American League. The American League allows another player to hit for the pitcher. This player is known as the designated hitter. However, in the National League, the pitcher must bat. Historically, the pitcher bats ninth, as they would have fewer plate appearances in a game on average. This paper will show how a simulated baseball game can determine where the pitcher should bat in the batting order to learn if the pitcher batting ninth is the optimal position. 
+
+
+## Methods
+
+To determine where a pitcher should bat in the line-up, a baseball simulator was created. Player's plate appearances where used to tabulate the probabilities of a single, double, triple, home run, walk, or out. The 2019 National League (NL) batting records from baseballreference.com were used to gather this data. Rankings pulled from baseballreference.com were used to produce the batting averages of the top 8 ranked players of each team in the NL. To do this, the plate appearances (singles, doubles, triples, home runs, walks, and outs) of every number one player were added and averaged. This was then completed in groupings for the number two, three, four, five, six, seven, and  eight ranked players of each NL team. The top 8 ranked players among teams in the NL tended to be players that played the most games during the 2019 season. After deducing the averages for each group ranking, a list of probability vectors was created using data manipulation to properly simulate a baseball game. These probabilities are used as inputs to the baseball simulator. This is a simplified version of the game of baseball; therefore, we have some underlining assumptions. These are listed below.
+
+1. A player can only get a single, double, triple, home run, walk, and out. All other possible outcomes while hitting have been excluded in this baseball simulator. 
+
+2. A player can only advance to the next base on a hit or a walk. In addition, a base-runner advances based on the hitters result. For example, if the hitter hits a double the base-runner advances two bases. 
+
+3. A baseball game is only nine innings, therefore, no extra innings are accounted for.
+
+Firstly, the baseball game function simulates an inning of baseball, then loops through 9 times to make a game. Then, a permutation function creates all possible combinations of a batting order without repetitions. There are 362,880 possible permutations of a batting order. Each line-up was initially ran for 162 games. This means the baseball simulator will simulate 58,786,560 games. This took about 3 hours using an above average computer in 2020. Once the output of the simulator is complete, it produces a dataset with the average runs per game for each line-up. Then, the top one percent of the best performing line-ups were selected for further simulations. This was repeated until there were only 36 line-ups remaining. Finally, the 36 line-ups were simulated 162,000 times to determine the most optimal ordering. At this point, the line-ups each simulated more than 162 times. This was increased in multiples of 10 from 162 to 1620 to 16200 to 162000. 
+
+After computing the best line-up using the average players statistics, a probability vector was created for each player in the line-up. Each player was given fake probabilities that emulate hitters line-up position characteristics. These are listed below:
+
+1. The first batter in the order is traditionally an individual with a high on-base percentage.
+ 
+2. The second batter is usually a contact hitter with the ability to move the baserunner over.
+ 
+3. the third batter is best all-around hitter, often hitting for a high batting average.
+ 
+4. The fourth batter has the most power and ability to drive in runs with extra-base hits
+ 
+5 & 6. The fifth and sixth batters have high on-base percentage. Back up for the 4th hitter
+ 
+7 & 8. Are not as powerful as the earlier batter but are great fielders
+
+Now, this probability vector was run through the baseball simulator to find the optimal line-up given this vector and determine if it will be consistent with the best line-up produced by the average player statistics. This simulator had the same number of simulations as before. 
+
+## Results
+Results: Describe all of the interesting results that you have found. In this case, you would describe the results of your simulations and summarize what you have learned. This is also where you would put tables and graphs with your results. (Tables are OK, but, figures are better!). Make sure you describe in detail what is in each table and figure.
+
+
+After running the baseball simulator using the average batting statistics of National League players, it showed that having the pitcher batting second produced the most runs per game on average. This result seemed suspicious because batting towards the top of the order results in more at-bats on average. In addition, no Major League Baseball team has ever  had the pitcher bat second. Therefore, to verify these results, I performed an additional simulation on the top one percent of the line-ups. There were 3628 line-ups being simulated 1620 times. From this set of simulations the best performing line-up was 4, 7, 1, 8, 2, 6, 3, 5, 9. This line-up produced 6.558642 runs per game on average. Next, I took the top 362 performing line-ups and ran them 16200 times. This set of simulations produced an optimal line-up was 8, 6, 2, 5, 3, 1, 4, 7, 9. Finally, the top 36 performing line-ups were simulated for 162,000 games. After 179,982 simulated games, the optimal position for the worst hitter (pitcher) to bat is ninth in the line-up. The line-up looks like this: 8, 3, 2, 6, 5, 4, 7, 1, 9. This means the MLB has been properly positioning the pitcher ninth in the order. In addition to showing where the pitcher should bat in the line-up, this simulation also showed where the eight other players should hit. If we implemented the optimal line-up for the Cubs, their line-up would look like this; Jason Heyward, Addison Russell, Anthony Rizzo, Kyle Schwarber, Kris Bryant, Javier Baez, Albert Almora, Willson Contreras, and finally the pitcher. 
+
+
+Similarly to a real line-up, hitting characteristics of each player in the line-up were used to emulate hitting position stereotypes. For example, hitter 1 usually has a high on-base percentage. These assumptions, along with the fake player statistics, were used to find the optimal line-up. After running 179,682 simulations using the fake player vectors, the best line-up looked like this: 3, 1, 6, 5, 4, 9, 2, 7, 8. This shows that having your best hitter bat first in the line-up, followed by a hitter with a high on-base percentage, is optimal. This line-up produced 3.156636 runs per game on average.
+
+
+## Conclusion
+Briefly restate what you did and then describe the results. It is also good to mention in this section other work that you would do in the future if you had time. This section is almost exclusively text.
+
+In this simulation, a baseball game was created in R to determine the optimal line-up when a pitcher is batting. To do this, the average players' statistics by rank were used to create a probability vector. This probability vector and the permutations of the ordering, as well as the number simulations, were used as inputs into the baseball simulator. This simulation showed that the optimal line-up and position of the pitcher was: 8, 3, 2, 6, 5, 4, 7, 1, 9. This shows that the pitcher, who is typically the worst hitter, should bat ninth in the line-up; however, using the hitting location characteristics (listed in the methods section) the optimal position for the pitcher was sixth. This seems suspicious, even though, this scenario was simulated over 100,000 times. This result may change if we tweek the fake probability vector.  
+
+Given more time, I would create a less simplified simulation of baseball by including sacrifice flies, bunts, and stolen bases. Additionally, the more complex simulation would include times that the base runner advances more bases than the batter hit. For example, if the batter hits a double and there is a runner on first base, the runner could score. 
+
+Overall, this simulation shows that baseball logic follows statistical results, as most teams that must have their pitchers hit, put them in the last slot of the line-up. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Appendix
+```{r}
+Braves = read.csv("~/Simulation Stat 421/Baseball data/Braves")
+Nationals = read.csv("~/Simulation Stat 421/Baseball data/Nationals")
+Mets = read.csv("~/Simulation Stat 421/Baseball data/Mets")
+Phillies = read.csv("~/Simulation Stat 421/Baseball data/Phillies")
+Marlins = read.csv("~/Simulation Stat 421/Baseball data/Marlins")
+Cardinals = read.csv("~/Simulation Stat 421/Baseball data/Cardinals")
+Brewers = read.csv("~/Simulation Stat 421/Baseball data/Brewers")
+Cubs = read.csv("~/Simulation Stat 421/Baseball data/Cubs")
+Reds  = read.csv("~/Simulation Stat 421/Baseball data/Reds")
+Pirates = read.csv("~/Simulation Stat 421/Baseball data/Pirates")
+Dodgers = read.csv("~/Simulation Stat 421/Baseball data/Dodgers")
+Diamondbacks = read.csv("~/Simulation Stat 421/Baseball data/Diamondbacks")
+Giants = read.csv("~/Simulation Stat 421/Baseball data/Giants")
+Rockies = read.csv("~/Simulation Stat 421/Baseball data/Rockies")
+Padres = read.csv("~/Simulation Stat 421/Baseball data/Padres")
+
+
+Hitters = c(Braves[1:8,], Nationals[1:8,], Mets[1:8,], Phillies[1:8,], Cardinals[1:8,],
+            Brewers[1:8,], Cubs[1:8,], Reds[1:8,], Pirates[1:8,], Dodgers[1:8,],Diamondbacks[1:8,],
+            Giants[1:8,], Rockies[1:8,],Padres[1:8,])
+
+
+#####################################
+#### Data Manipulation for Hitters###
+average_stats = function(x){
+  Bstat = list(Plate_Apperence_avg = c(), Atbats_avg = c(), Single_avg = c(), Double_avg = c(), Triple_avg = c(), HomeRun_avg = c(),Walk_avg = c())
+  for(i in 1:8){
+    Bstat$Plate_Apperence_avg[i] = x[i,6]
+    Bstat$Atbats_avg[i] = x[i,7]
+    Bstat$Single_avg[i] = x[i,9]
+    Bstat$Double_avg[i] = x[i,10]
+    Bstat$Triple_avg[i] = x[i,11]
+    Bstat$HomeRun_avg[i] = x[i,12]
+    Bstat$Walk_avg[i] = x[i,16] + x[i,28] + x[i,25]
+  }
+  return(Bstat)
+}  
+
+B = average_stats(Braves)
+N = average_stats(Nationals)
+M = average_stats(Mets)
+P = average_stats(Phillies)
+C = average_stats(Cardinals)
+B2 = average_stats(Brewers)
+C2 = average_stats(Cubs)
+R = average_stats(Reds)
+P2 = average_stats(Pirates)
+D = average_stats(Dodgers)
+D2 = average_stats(Diamondbacks)
+G = average_stats(Giants)
+
+
+mean_PA = (B$Plate_Apperence_avg + N$Plate_Apperence_avg + M$Plate_Apperence_avg + P$Plate_Apperence_avg + C$Plate_Apperence_avg + B2$Plate_Apperence_avg + C2$Plate_Apperence_avg + R$Plate_Apperence_avg + P2$Plate_Apperence_avg + D$Plate_Apperence_avg + D2$Plate_Apperence_avg  + G$Plate_Apperence_avg)/12
+
+mean_S = (B$Single_avg + N$Single_avg + M$Single_avg + P$Single_avg + C$Single_avg + B2$Single_avg + C2$Single_avg + R$Single_avg + P2$Single_avg + D$Single_avg + D2$Single_avg  + G$Single_avg)/12
+
+mean_D = (B$Double_avg + N$Double_avg + M$Double_avg + P$Double_avg + C$Double_avg + B2$Double_avg + C2$Double_avg + R$Double_avg + P2$Double_avg + D$Double_avg + D2$Double_avg  + G$Double_avg)/12
+
+mean_T = (B$Triple_avg + N$Triple_avg + M$Triple_avg + P$Triple_avg + C$Triple_avg + B2$Triple_avg + C2$Triple_avg + R$Triple_avg + P2$Triple_avg + D$Triple_avg + D2$Triple_avg  + G$Triple_avg)/12
+
+mean_HR = (B$HomeRun_avg + N$HomeRun_avg + M$HomeRun_avg + P$HomeRun_avg + C$HomeRun_avg + B2$HomeRun_avg + C2$HomeRun_avg + R$HomeRun_avg + P2$HomeRun_avg + D$HomeRun_avg + D2$HomeRun_avg  + G$HomeRun_avg)/12
+
+mean_W = (B$Walk_avg + N$Walk_avg + M$Walk_avg + P$Walk_avg + C$Walk_avg + B2$Walk_avg + C2$Walk_avg + R$Walk_avg + P2$Walk_avg + D$Walk_avg + D2$Walk_avg  + G$Walk_avg)/12
+
+single = mean_S / mean_PA
+double = mean_D / mean_PA
+triple = mean_T / mean_PA
+HomeRun = mean_HR / mean_PA
+Walk = mean_W / mean_PA
+Out = 1 - (single + double + triple + HomeRun + Walk)
+####################################
+#####################################
+
+
+########################################
+#### Data Manipulation for Pitchers ####
+########################################
+
+Pitchers = rbind(Braves[54,], Nationals[54,], Mets[57,], Phillies[60,],Cardinals[47,],Brewers[54,], Cubs[56,], Reds[51,], Pirates[58,],Dodgers[50,],Diamondbacks[49,],Giants[68,],Rockies[54,],Padres[58,])
+
+Pitcher_stat = function(x){
+  Pstat = list(Plate_Apperence_avg = x[nrow(x),6], Atbats_avg = x[nrow(x),7], Single_avg = x[nrow(x),9], Double_avg = x[nrow(x),10], Triple_avg = x[nrow(x),11], HomeRun_avg = x[nrow(x),12], Walk_avg = x[nrow(x),16] + x[nrow(x),25] + x[nrow(x),28])
+  
+}
+Bp = Pitcher_stat(Braves)
+Np = Pitcher_stat(Nationals)
+Mp = Pitcher_stat(Mets)
+Pp = Pitcher_stat(Phillies)
+Cp = Pitcher_stat(Cardinals)
+Bp2 = Pitcher_stat(Brewers)
+Cp2 = Pitcher_stat(Cubs)
+Rp = Pitcher_stat(Reds)
+Pp2 = Pitcher_stat(Pirates)
+Dp = Pitcher_stat(Dodgers)
+Dp2 = Pitcher_stat(Diamondbacks)
+Gp = Pitcher_stat(Giants)
+
+pmean_PA = (Bp$Plate_Apperence_avg + Np$Plate_Apperence_avg + Mp$Plate_Apperence_avg + Pp$Plate_Apperence_avg + Cp$Plate_Apperence_avg + Bp2$Plate_Apperence_avg + Cp2$Plate_Apperence_avg + Rp$Plate_Apperence_avg + Pp2$Plate_Apperence_avg + Dp$Plate_Apperence_avg + Dp2$Plate_Apperence_avg + Gp$Plate_Apperence_avg) / 12
+
+pmean_S = (Bp$Single_avg + Np$Single_avg + Mp$Single_avg + Pp$Single_avg + Cp$Single_avg + Bp2$Single_avg + Cp2$Single_avg + Rp$Single_avg + Pp2$Single_avg + Dp$Single_avg + Dp2$Single_avg + Gp$Single_avg) / 12
+
+pmean_D = (Bp$Double_avg + Np$Double_avg + Mp$Double_avg + Pp$Double_avg + Cp$Double_avg + Bp2$Double_avg + Cp2$Double_avg + Rp$Double_avg + Pp2$Double_avg + Dp$Double_avg + Dp2$Double_avg + Gp$Double_avg) / 12
+
+pmean_T = (Bp$Triple_avg + Np$Triple_avg + Mp$Triple_avg + Pp$Triple_avg + Cp$Triple_avg + Bp2$Triple_avg + Cp2$Triple_avg + Rp$Triple_avg + Pp2$Triple_avg + Dp$Triple_avg + Dp2$Triple_avg + Gp$Triple_avg) / 12
+
+pmean_HR = (Bp$HomeRun_avg + Np$HomeRun_avg + Mp$HomeRun_avg + Pp$HomeRun_avg + Cp$HomeRun_avg + Bp2$HomeRun_avg + Cp2$HomeRun_avg + Rp$HomeRun_avg + Pp2$HomeRun_avg + Dp$HomeRun_avg + Dp2$HomeRun_avg + Gp$HomeRun_avg) / 12
+
+pmean_W = (Bp$Walk_avg + Np$Walk_avg + Mp$Walk_avg + Pp$Walk_avg + Cp$Walk_avg + Bp2$Walk_avg + Cp2$Walk_avg + Rp$Walk_avg + Pp2$Walk_avg + Dp$Walk_avg + Dp2$Walk_avg + Gp$Walk_avg) / 12
+
+p_single = pmean_S / pmean_PA
+p_double = pmean_D / pmean_PA
+p_triple = pmean_T / pmean_PA
+p_HomeRun = pmean_HR / pmean_PA
+p_Walk = pmean_W / pmean_PA
+p_Out = 1 - (p_single + p_double + p_triple + p_HomeRun + p_Walk)
+
+
+
+# Average stats for players Rank according to Baseball Reference
+# 1-8 are fielders
+# 9 is the pitcher
+# Rk = c(Single %, Double  %, Triple %, Home Run %, Walk %, Out %)
+Avg_lineup = list(Rk1 = c(single[1], double[1], triple[1], HomeRun[1], Walk[1], Out[1]),
+                  Rk2 = c(single[2], double[2], triple[2], HomeRun[2], Walk[2], Out[2]),
+                  Rk3 = c(single[3], double[3], triple[3], HomeRun[3], Walk[3], Out[3]),
+                  Rk4 = c(single[4], double[4], triple[4], HomeRun[4], Walk[4], Out[4]),
+                  Rk5 = c(single[5], double[5], triple[5], HomeRun[5], Walk[5], Out[5]),
+                  Rk6 = c(single[6], double[6], triple[6], HomeRun[6], Walk[6], Out[6]),
+                  Rk7 = c(single[7], double[7], triple[7], HomeRun[7], Walk[7], Out[7]),
+                  Rk8 = c(single[8], double[8], triple[8], HomeRun[8], Walk[8], Out[8]),
+                  Rk9 = c(p_single[1], p_double[1], p_triple[1], p_HomeRun[1], p_Walk[1], p_Out[1]))
+Avg_lineup
+
+```
+
+
+```{r}
+### Baseball Game Simulator ###
+game = function(x){
+  out = list(Bases = 0, Outs = 0, Runs =  0)
+  state = c("single", "double", "triple", "home run", "walk", "out")
+  
+  i = 0
+  for(j in 1:9){
+    out$Outs = 0
+    out$Bases = 0
+  while(out$Outs < 3){
+    
+    h = sample(state, 1, prob = x[[(i%%9 + 1)]])
+    i = i + 1
+    
+    # counting outs
+    if(h == "out"){
+      out$Outs = out$Outs + 1
+    }else{
+      out$Outs = out$Outs
+    }
+    
+    # tracking base runners
+    # no one on base
+    if(out$Bases == 0){
+      if(h == "single"){
+        out$Bases = 100
+      }else if(h == "double"){
+        out$Bases = 10
+      }else if(h == "triple"){
+        out$Bases = 1
+      }else if(h == "home run"){
+        out$Bases = 0
+        out$Runs = out$Runs + 1
+      }else if(h == "walk"){
+        out$Bases = 100
+      }
+    # When someone is on first
+    }else if(out$Bases == 100){
+      if(h == "single"){
+        out$Bases = 110
+      }else if(h == "double"){
+        out$Bases = 011
+      }else if(h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 1
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 2
+      }else if(h == "walk"){
+        out$Bases = 110
+      }
+    # When someone is on first and second
+    }else if(out$Bases == 110){
+      if(h == "single"){
+        out$Bases = 111
+      }else if(h == "double"){
+        out$Bases = 011
+        out$Runs = out$Runs + 1
+      }else if(h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 2
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 3
+      }else if(h == "walk"){
+        out$Bases = 111
+      }
+    # When runners are on 1,2,3
+    }else if(out$Bases == 111){
+      if(h == "single"){
+        out$Bases = 111
+        out$Runs = out$Runs + 1
+      }else if(h == "double"){
+        out$Bases = 011
+        out$Runs = out$Runs + 2
+      }else if(h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 3
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 4
+      }else if(h == "walk"){
+        out$Bases = 111
+        out$Runs = out$Runs + 1
+      }
+    }
+    # When someone is on second
+    else if(out$Bases == 010){
+      if(h == "single"){
+        out$Bases = 011
+      }else if(h == "double"){
+        out$Bases = 010
+        out$Runs = out$Runs + 1
+      }else if(h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 1
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 2
+      }else if(h == "walk"){
+        out$Bases = 011
+      }
+    }
+    # When runners are on 2,3
+    else if(out$Bases == 011){
+      if(h == "single"){
+        out$Bases = 101
+        out$Runs = out$Runs + 1
+      }else if(h == "double"){
+        out$Bases = 010
+        out$Runs = out$Runs + 2 
+      }else if(h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 2
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 3
+      }else if(h == "walk"){
+        out$Bases = 101
+        out$Runs = out$Runs + 1
+      }
+    }
+    # When someone is on third
+    else if(out$Bases == 001){
+      if(h == "single"){
+        out$Bases = 100
+        out$Runs = out$Runs + 1
+      }else if(h == "double"){
+        out$Bases = 010
+        out$Runs = out$Runs + 1
+      }else if (h == "triple"){
+        out$Bases = 001
+        out$Runs = out$Runs + 1
+      }else if(h == "home run"){
+        out$Bases = 000
+        out$Runs = out$Runs + 2
+      }else if(h == "walk"){
+        out$Bases = 100
+        out$Runs = out$Runs + 1
+      }
+    }
+    
+  }
+  }
+  return(out)
+}
+
+library(gtools)
+lineup_perms = permutations(9,9, repeats.allowed = F)
+```
+
+
+```{r, eval=FALSE}
+library(parallel)
+library(foreach)
+library(doParallel)
+num_cores = detectCores() - 1
+registerDoParallel(num_cores)
+
+start = Sys.time()
+# Simulation
+Avg_lineup_df = as.data.frame(Avg_lineup)
+avg_Runs = c()
+All_Lineups = c(rep(NA, nrow(lineup_perms)))
+# Parallel processing 
+All_Lineups = foreach(i = 1:nrow(lineup_perms), .combine = c) %dopar% {
+  Avg_lineup_df = Avg_lineup_df[,lineup_perms[i,]]
+  Avg_lineup = as.list(Avg_lineup_df)
+  sim_lineup = replicate(162, game(Avg_lineup)$Runs)
+  mean(sim_lineup)
+}
+
+end = Sys.time()
+end-start
+
+lineup_scores = as.data.frame(All_Lineups)%>%
+  mutate(`Lineup_perm` = seq.int(nrow(lineup_scores)))%>%
+  arrange(desc(`All_Lineups`))
+
+#write.csv(lineup_scores, "~/Predictive STAT 488/lineup_scores.csv")
+```
+
+```{r}
+lineup_scores = read.csv("~/Simulation Stat 421/lineup_scores.csv")
+head(lineup_scores[,-1])
+lineup_perms[lineup_scores[1,3],]
+```
+
+```{r, eval=FALSE}
+# Inputs: Avg_lineup and best lineups generated above
+Baseball_Simulation = function(players_stats, dataset,nsim){
+  Best_orders = lineup_perms[c(dataset[,2]),]
+
+  library(foreach)
+  library(doParallel)
+  num_cores = detectCores() - 1
+  registerDoParallel(num_cores)
+
+  # Simulation
+  lineup_df = as.data.frame(players_stats)
+  Best_Lineups = c(rep(NA, nrow(Best_orders)))
+  Best_Lineups = foreach(i = 1:nrow(Best_orders), .combine = c) %dopar% {
+    lineup_df = lineup_df[,Best_orders[i,]]
+    lineup = as.list(lineup_df)
+    sim_lineup = replicate(nsim, game(lineup)$Runs)
+    mean(sim_lineup)
+  }
+
+  return(Best_Lineups)
+}
+```
+
+```{r, eval=FALSE}
+lineup_scores = read.csv("~/Simulation Stat 421/lineup_scores.csv")
+lineup_scores = lineup_scores[,-1]
+
+best_Lineups = lineup_scores[1:3628,]
+
+Best_subset = Baseball_Simulation(Avg_lineup, best_Lineups, 1620)
+```
+
+```{r}
+Avg_subset1 = read.csv("~/Simulation Stat 421/Avg_subset1.csv")
+head(Avg_subset1[,-1])
+lineup_perms[Avg_subset1[1,3],]
+```
+
+```{r, eval=FALSE}
+# Taking the top 10% of the top 1% and running another simulation to refine the best lineup on average
+top.01p = Best_subset[1:362,]
+
+new = Baseball_Simulation(Avg_lineup, top.01p, 16200)
+
+best_new = as.data.frame(new)%>%
+  mutate(`Lineup_perm` = top.01p[,2])%>%
+  arrange(desc(`new`))
+```
+
+```{r}
+Avg_subset2 = read.csv("~/Simulation Stat 421/Avg_subset2.csv")
+head(Avg_subset2[,-1])
+lineup_perms[Avg_subset2[1,3],]
+```
+
+
+```{r,eval=FALSE}
+top36 = best_new[1:36,]
+
+new36 = Baseball_Simulation(Avg_lineup, top36, 162000)
+
+best_new36 = as.data.frame(new36)%>%
+  mutate(`Lineup_perm` = top36[,2])%>%
+  arrange(desc(`new36`))
+```
+
+```{r}
+Avg_subset3 = read.csv("~/Simulation Stat 421/Avg_subset3.csv")
+head(Avg_subset3[,-1])
+lineup_perms[Avg_subset3[1,3],]
+```
+
+```{r}
+# Making fake players that follow line-up characteristics
+ 
+# 1. The first batter in the order is traditionally an individual with a high on-base percentage.
+ 
+# 2. The second batter is usually a contact hitter with the ability to move the baserunner over.
+ 
+# 3. the third batter is best all-around hitter, often hitting for a high batting average.
+ 
+# 4. The fourth batter has the most power and ability to drive in runs with extra-base hits
+ 
+# 5 & 6. The fifth and sixth batters have high on-base percentage. Back up for the 4th hitter
+ 
+# 7 & 8. Are not as powerful as the earlier batter but are great fielders
+
+fake = list(f1 = c(.1, .05, 0, 0, .1, .75),
+            f2 = c(.06, .06, 0, .02, .08, .78),
+            f3 = c(.06, .06, .06, .06, .06, .70),
+            f4 = c(.01, .119, 0, .15, .001, .72),
+            f5 = c(.038, .07, .002, .1, .04, .75),
+            f6 = c(.038, .07, .002, .1, .04, .75),
+            f7 = c(.1, .08, 0, 0, .02, .80),
+            f8 = c(.1, .069, 0, 0.001, .04, .79),
+            f9 = c(.015, .005, 0, 0, .03, .95))
+
+fake
+```
+
+
+```{r,eval=FALSE}
+num_cores = detectCores() - 1
+registerDoParallel(num_cores)
+
+start = Sys.time()
+# Simulation
+lineup_df = as.data.frame(fake)
+avg_Runs = c()
+All_Lineups = c(rep(NA, nrow(lineup_perms)))
+# Parallel processing 
+All_Lineups = foreach(i = 1:nrow(lineup_perms), .combine = c) %dopar% {
+  lineup_df = lineup_df[,lineup_perms[i,]]
+  lineup = as.list(lineup_df)
+  sim_lineup = replicate(162, game(lineup)$Runs)
+  mean(sim_lineup)
+}
+
+end = Sys.time()
+end-start
+
+library(dplyr)
+lineup_scores = as.data.frame(All_Lineups)%>%
+  mutate(`Lineup_perm` = seq.int(nrow(lineup_scores)))%>%
+  arrange(desc(`All_Lineups`))
+
+```
+
+
+```{r, eval=FALSE}
+# 1st Subset of best lineup permutations
+sub_lineups_1 = lineup_scores[1:3628,]
+new3628 = Baseball_Simulation(fake, sub_lineups_1, 1620)
+
+best_new3628 = as.data.frame(new3628)%>%
+  mutate(`Lineup_perm` = sub_lineups_1[,2])%>%
+  arrange(desc(`new3628`))
+
+write.csv(best_new3628, "~/Simulation Stat 421/best_new3628.csv")
+```
+
+```{r}
+best_3628 = read.csv("~/Simulation Stat 421/best_new3628.csv")
+head(best_3628[,-1])
+lineup_perms[best_3628[1,3],]
+```
+
+```{r, eval=FALSE}
+# 2nd Subset of best lineup permutations
+sub_lineups_2 = best_new3628[1:362,]
+new362 = Baseball_Simulation(fake, sub_lineups_2, 16200)
+
+best_new362 = as.data.frame(new362)
+best_new362 = best_new362%>%
+  mutate(`Lineup_perm` = sub_lineups_2[,2])%>%
+  arrange(desc(`new362`))
+
+write.csv(best_new362, "~/Simulation Stat 421/best_new362.csv")
+```
+
+```{r}
+best_362 = read.csv("~/Simulation Stat 421/best_new362.csv")
+head(best_362[,-1])
+lineup_perms[best_362[1,3],]
+```
+
+```{r,eval=FALSE}
+# 3rd subset of best lineup permutaitons
+sub_lineups_3 = best_new362[1:36,]
+new36 = Baseball_Simulation(fake, sub_lineups_3, 162000)
+
+best_new36 = as.data.frame(new36)
+best_new36 = best_new36%>%
+  mutate(`Lineup_perm` = sub_lineups_3[,2])%>%
+  arrange(desc(`new36`))
+
+write.csv(best_new36, "~/Simulation Stat 421/best_new36.csv")
+```
+
+```{r}
+best_36 = read.csv("~/Simulation Stat 421/best_new36.csv")
+head(best_36[,-1])
+lineup_perms[best_36[1,3],]
+```
+
+
+
